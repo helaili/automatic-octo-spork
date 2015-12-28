@@ -1,6 +1,6 @@
 {
-  "name": "meanjs",
-  "description": "Fullstack JavaScript with MongoDB, Express, AngularJS, and Node.js.",
+  "name": "automatic-octo-spork",
+  "description": "A multi-purpose system that's automated",
   "homepage": "http://meanjs.org/",
   "license": "MIT",
   "dependencies": {
