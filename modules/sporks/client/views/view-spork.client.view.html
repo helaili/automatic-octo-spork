@@ -1,0 +1,22 @@
+<section ng-controller="sporksController" ng-init="findOne()">
+  <div class="page-header">
+    <h1 ng-bind="spork.title"></h1>
+  </div>
+  <div class="pull-right" ng-show="authentication.user._id == spork.user._id">
+    <a class="btn btn-primary" ui-sref="sporks.edit({sporkId: spork._id})">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="remove();">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span ng-bind="spork.created | date:'mediumDate'"></span>
+      by
+      <span ng-bind="spork.user.displayName"></span>
+    </em>
+  </small>
+  <p class="lead" ng-bind="spork.content"></p>
+</section>

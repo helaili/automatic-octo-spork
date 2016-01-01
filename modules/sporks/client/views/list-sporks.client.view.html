@@ -1,0 +1,20 @@
+<section ng-controller="sporksController" ng-init="find()">
+  <div class="page-header">
+    <h1>Sporks</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="spork in sporks" ui-sref="sporks.view({sporkId: spork._id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="spork.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="spork.user.displayName"></span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="spork.title"></h4>
+      <p class="list-group-item-text" ng-bind="spork.content"></p>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="sporks.$resolved && !sporks.length">
+    No sporks yet, why don't you <a ui-sref="sporks.create">create one</a>?
+  </div>
+</section>
