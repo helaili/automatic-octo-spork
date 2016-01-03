@@ -14,23 +14,69 @@ var SporkSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  title: {
-    type: String,
-    default: '',
-    trim: true,
-    required: 'Title cannot be blank'
+  updated: {
+    type: Date,
+    default: Date.now
   },
-  firstname: {
+  name: {
     type: String,
     default: '',
     trim: true,
-    required: 'Title cannot be blank'
+    required: 'Name cannot be blank'
   },
-  lastname: {
+  description: {
     type: String,
     default: '',
     trim: true,
-    required: 'Title cannot be blank'
+    required: 'Description cannot be blank'
+  },
+  menu : {
+    title : {
+      type: String,
+      default: '',
+      trim: true,
+      required: 'Menu title cannot be blank'
+    },
+    state : {
+      type: String,
+      default: '',
+      trim: true,
+      required: 'Menu state cannot be blank'
+    },
+    url : {
+      type: String,
+      default: '',
+      trim: true,
+      required: 'URL cannot be blank'
+    },
+    items : [
+      {
+        title : {
+          type: String,
+          default: '',
+          trim: true,
+          required: 'Menu title cannot be blank'
+        },
+        state : {
+          type: String,
+          default: '',
+          trim: true,
+          required: 'Menu state cannot be blank'
+        },
+        url : {
+          type: String,
+          default: '',
+          trim: true,
+          required: 'URL cannot be blank'
+        },
+        templateUrl : {
+          type: String,
+          default: '',
+          trim: true,
+          required: 'Template URL cannot be blank'
+        }
+      }
+    ]
   },
   owner: {
     type: Schema.ObjectId,

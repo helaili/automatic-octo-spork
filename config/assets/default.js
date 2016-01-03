@@ -17,7 +17,9 @@ module.exports = {
         'public/lib/angular-ui-utils/ui-utils.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
         'public/lib/angular-file-upload/dist/angular-file-upload.js',
-        'public/lib/owasp-password-strength-test/owasp-password-strength-test.js'
+        'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
+        'public/lib/ui-router-extras/release/modular/ct-ui-router-extras.core.min.js',
+        'public/lib/ui-router-extras/release/modular/ct-ui-router-extras.future.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

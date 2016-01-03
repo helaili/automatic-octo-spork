@@ -80,6 +80,7 @@ exports.list = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      res.append('Cache-Control', 'private, max-age=60');
       res.json(sporks);
     }
   });

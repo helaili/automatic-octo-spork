@@ -1,0 +1,102 @@
+{
+  'name' : 'contact',
+  'description' : 'This is the contact module',
+  'menu' : {
+    'title' : 'Contacts',
+    'state' : 'contacts',
+    'url' : '/contacts',
+    'items' : [
+      {
+        'title' : 'List Contacts',
+        'state' : 'contacts.list',
+        'url' : '/',
+        'templateUrl': 'modules/sporks/client/views/list-sporks.client.view.html'
+      },
+      {
+        'title' : 'Create Contact',
+        'state' : 'contacts.create',
+        'url' : '/create',
+        'templateUrl': 'modules/sporks/client/views/create-spork.client.view.html'
+      }
+    ]
+  },
+  'fields' : {
+    'title' : {
+      'type' : 'dropdown',
+      'label' : 'Title',
+      'model' : 'title',
+      'placeholder' : 'Title',
+      'required' : true,
+      'errorMessages' : [
+        { 'type' : 'required', 'text' : 'You must provide a title' }
+      ],
+      'options' : [
+        { 'label' : 'Mr.', 'value' : 'Mr' },
+        { 'label' : 'Ms.', 'value' : 'Ms' },
+        { 'label' : 'Dr.', 'value' : 'Dr' }
+      ]
+    },
+    'firstname' : {
+      'type' : 'text',
+      'label' : 'Firstname',
+      'model' : 'firstname',
+      'placeholder' : 'Firstname',
+      'required' : false,
+      'minlength' : 2,
+      'errorMessages' : [
+        { 'type' : 'minlength', 'text' : 'Firstname must be at least 2 characters' }
+      ]
+    },
+    'email' :{
+      'type' : 'text',
+      'label' : 'Email',
+      'model' : 'email',
+      'placeholder' :'Email',
+      'required' : false,
+      'pattern' : '.*@.*\\..*',
+      'errorMessages' : [
+        { 'type' : 'pattern', 'text' : 'Invalide email address pattern' }
+      ]
+    },
+    'phone' : {
+      'type' : 'text',
+      'label' : 'Phone',
+      'model' : 'phone',
+      'placeholder' : 'Phone number',
+      'required' : true,
+      'errorMessages' : [
+        { 'type' : 'required', 'text' : 'You must provide a phone number' }
+      ]
+    },
+    'cell' : {
+      'type' : 'text',
+      'label' : 'Cell',
+      'model' : 'cell',
+      'placeholder' : 'Cell phone number',
+      'required' : true,
+      'errorMessages' : [
+        { 'type' : 'required', 'text' : 'You must provide a cell number' }
+      ]
+    }
+  },
+  forms : {
+    sporkCreationForm : {
+      cols : [
+        [
+          { 'name' : 'title' },
+          { 'name' : 'firstname' }
+        ],
+        [
+          { 'name' : 'email' },
+          { 'name' : 'phone' },
+          { 'name' : 'cell' }
+        ]
+      ],
+      actions : [
+        { 'name' : 'save', 'label' : 'Save', 'click' : 'test' },
+        { 'name' : 'cancel', 'label' : 'Cancel', 'click' : 'test' },
+        { 'name' : 'reset', 'label' : 'Reset', 'click' : 'test' }
+      ]
+    }
+  }
+}

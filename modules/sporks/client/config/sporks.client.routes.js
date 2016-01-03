@@ -32,5 +32,24 @@ angular.module('sporks').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       });
+
+    var initInjector = angular.injector(['ng']);
+    var $http = initInjector.get('$http');
+    $http.get('http://localhost:3000/api/sporks').then(function(response) {
+      response.data.forEach(function(spork) {
+        $stateProvider.state(spork.menu.state, {
+          abstract: true,
+          url: spork.menu.url,
+          template: '<ui-view/>'
+        });
+
+        spork.menu.items.forEach(function (menuItem, menuItemIndex) {
+          $stateProvider.state(menuItem.state, {
+            url: menuItem.url,
+            templateUrl: menuItem.templateUrl
+          });
+        });
+      });
+    });
   }
 ]);

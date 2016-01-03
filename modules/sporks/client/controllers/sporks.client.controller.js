@@ -1,9 +1,14 @@
 'use strict';
 
 // sporks controller
-angular.module('sporks').controller('sporksController', ['$scope', '$interpolate', '$stateParams', '$location', 'Authentication', 'Sporks',
-  function ($scope, $interpolate, $stateParams, $location, Authentication, Sporks) {
+angular.module('sporks').controller('sporksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Sporks',
+  function ($scope, $stateParams, $location, Authentication, Sporks) {
     $scope.authentication = Authentication;
+
+    console.log('controller');
+
+
+
     $scope.sporkCreationFormObj = {
       name : 'sporkCreationForm',
       actions : [
@@ -81,6 +86,21 @@ angular.module('sporks').controller('sporksController', ['$scope', '$interpolate
       ]
     };
 
+    /*
+
+    $futureStateProvider.addResolve(function(Sporks) {
+      Sporks.list(function(sporkArray){
+        sporkArray.forEach(function (spork, sporkIndex) {
+          $futureStateProvider.futureState({
+            type: 'myType',
+            name: spork.state,
+            url: spork.url,
+            templateUrl: spork.templateUrl
+          });
+        });
+      });
+    });
+*/
     $scope.callAction = function(action) {
       console.log('call action');
       if (!$scope[$scope.sporkCreationFormObj.name].$valid) {
@@ -170,7 +190,7 @@ angular.module('sporks').controller('sporksController', ['$scope', '$interpolate
 
     // Find a list of sporks
     $scope.find = function () {
-      $scope.sporks = Sporks.query();
+      $scope.sporks = Sporks.list();
     };
 
     // Find existing Spork
