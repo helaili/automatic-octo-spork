@@ -13,6 +13,10 @@ module.exports = function (app) {
     .post(sporks.create);
 
   // Single spork routes
+  app.route('/api/sporks/state/:stateName').all(sporksPolicy.isAllowed)
+    .get(sporks.sporkByState);
+
+  // Single spork routes
   app.route('/api/sporks/:sporkId').all(sporksPolicy.isAllowed)
     .get(sporks.read)
     .put(sporks.update)

@@ -30,9 +30,126 @@ describe('Spork Model Unit Tests:', function () {
 
     user.save(function () {
       spork = new Spork({
-        title: 'Spork Title',
-        content: 'Spork Content',
-        user: user
+        'name' : 'contact',
+        'description' : 'This is the contact module',
+        'menu' : {
+          'title' : 'Contacts',
+          'state' : 'contacts',
+          'url' : '/contacts',
+          'items' : [
+            {
+              'title' : 'List Contacts',
+              'state' : 'contacts.list',
+              'url' : '/',
+              'view' : 'contactList',
+              'templateUrl': 'modules/sporks/client/views/list-sporks.client.view.html'
+            },
+            {
+              'title' : 'Create Contact',
+              'state' : 'contacts.create',
+              'url' : '/create',
+              'view' : 'contactCreationForm',
+              'templateUrl': 'modules/sporks/client/views/create-spork.client.view.html'
+            }
+          ]
+        },
+        'fields' : [
+          {
+            'name' : 'title',
+            'fieldType' : 'select',
+            'label' : 'Title',
+            'model' : 'title',
+            'placeholder' : 'Title',
+            'required' : true,
+            'errorMessages' : [
+              { 'errorType' : 'required', 'text' : 'You must provide a title' }
+            ],
+            'options' : [
+              { 'label' : 'Mr.', 'value' : 'Mr' },
+              { 'label' : 'Ms.', 'value' : 'Ms' },
+              { 'label' : 'Dr.', 'value' : 'Dr' }
+            ]
+          },
+          {
+            'name' : 'firstname',
+            'fieldType' : 'text',
+            'label' : 'Firstname',
+            'model' : 'firstname',
+            'placeholder' : 'Firstname',
+            'required' : false,
+            'minlength' : 2,
+            'errorMessages' : [
+              { 'errorType' : 'minlength', 'text' : 'Firstname must be at least 2 characters' }
+            ]
+          },
+          {
+            'name' : 'email',
+            'fieldType' : 'text',
+            'label' : 'Email',
+            'model' : 'email',
+            'placeholder' :'Email',
+            'required' : false,
+            'pattern' : '.*@.*\\..*',
+            'errorMessages' : [
+              { 'errorType' : 'pattern', 'text' : 'Invalide email address pattern' }
+            ]
+          },
+          {
+            'name' : 'phone',
+            'fieldType' : 'text',
+            'label' : 'Phone',
+            'model' : 'phone',
+            'placeholder' : 'Phone number',
+            'required' : true,
+            'errorMessages' : [
+              { 'errorType' : 'required', 'text' : 'You must provide a phone number' }
+            ]
+          },
+          {
+            'name' : 'cell',
+            'fieldType' : 'text',
+            'label' : 'Cell',
+            'model' : 'cell',
+            'placeholder' : 'Cell phone number',
+            'required' : true,
+            'errorMessages' : [
+              { 'errorType' : 'required', 'text' : 'You must provide a cell number' }
+            ]
+          }
+        ],
+        'views' : [
+          {
+            'name' : 'contactCreationForm',
+            'viewType' : 'form',
+            'cols' : [
+              {
+                'width' : 6,
+                'fields' : [
+                  { 'name' : 'title' },
+                  { 'name' : 'firstname' }
+                ]
+              },
+              {
+                'width' : 6,
+                'fields' : [
+                  { 'name' : 'email' },
+                  { 'name' : 'phone' },
+                  { 'name' : 'cell' }
+                ]
+              }
+            ],
+            'actions' : [
+              { 'name' : 'save', 'label' : 'Save', 'click' : 'test' },
+              { 'name' : 'cancel', 'label' : 'Cancel', 'click' : 'test' },
+              { 'name' : 'reset', 'label' : 'Reset', 'click' : 'test' }
+            ]
+          },
+          {
+            'name' : 'contactList',
+            'viewType' : 'list'
+          }
+        ],
+        'owner' : user
       });
 
       done();
@@ -48,8 +165,8 @@ describe('Spork Model Unit Tests:', function () {
       });
     });
 
-    it('should be able to show an error when try to save without title', function (done) {
-      spork.title = '';
+    it('should be able to show an error when try to save without name', function (done) {
+      spork.name = '';
 
       return spork.save(function (err) {
         should.exist(err);

@@ -1,6 +1,6 @@
 'use strict';
 
-//TODO : cache option doesn't seem to be applied. 
+//TODO : cache option doesn't seem to be applied.
 
 //sporks service used for communicating with the sporks REST endpoints
 angular.module('sporks').factory('Sporks', ['$resource',
@@ -16,6 +16,11 @@ angular.module('sporks').factory('Sporks', ['$resource',
         url: 'api/sporks',
         cache: true,
         isArray: true
+      },
+      sporkByState: {
+        method: 'GET',
+        url: 'api/sporks/state/:stateName',
+        cache: true
       }
     });
   }

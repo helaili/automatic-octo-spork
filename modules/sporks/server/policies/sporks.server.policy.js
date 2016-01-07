@@ -27,16 +27,16 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/sporks',
       permissions: ['get', 'post']
     }, {
-      resources: '/api/sporks/:sporkId',
+      resources: '/api/sporks/state/:stateName',
       permissions: ['get']
+    }, {
+      resources: '/api/sporks/:sporkId',
+      permissions: ['get', 'put', 'delete']
     }]
   }, {
     roles: ['guest'],
     allows: [{
       resources: '/api/sporks',
-      permissions: ['get']
-    }, {
-      resources: '/api/sporks/:sporkId',
       permissions: ['get']
     }]
   }]);
@@ -49,7 +49,7 @@ exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
   // If an spork is being processed and the current user created it then allow any manipulation
-  if (req.spork && req.user && req.spork.user.id === req.user.id) {
+  if (req.spork && req.user && req.spork.owner.id === req.user.id) {
     return next();
   }
 

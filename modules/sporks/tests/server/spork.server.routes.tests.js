@@ -47,8 +47,126 @@ describe('Spork CRUD tests', function () {
     // Save a user to the test db and create new spork
     user.save(function () {
       spork = {
-        title: 'Spork Title',
-        content: 'Spork Content'
+        'name' : 'contact',
+        'description' : 'This is the contact module',
+        'menu' : {
+          'title' : 'Contacts',
+          'state' : 'contacts',
+          'url' : '/contacts',
+          'items' : [
+            {
+              'title' : 'List Contacts',
+              'state' : 'contacts.list',
+              'url' : '/',
+              'view' : 'contactList',
+              'templateUrl': 'modules/sporks/client/views/list-sporks.client.view.html'
+            },
+            {
+              'title' : 'Create Contact',
+              'state' : 'contacts.create',
+              'url' : '/create',
+              'view' : 'contactCreationForm',
+              'templateUrl': 'modules/sporks/client/views/create-spork.client.view.html'
+            }
+          ]
+        },
+        'fields' : [
+          {
+            'name' : 'title',
+            'fieldType' : 'select',
+            'label' : 'Title',
+            'model' : 'title',
+            'placeholder' : 'Title',
+            'required' : true,
+            'errorMessages' : [
+              { 'errorType' : 'required', 'text' : 'You must provide a title' }
+            ],
+            'options' : [
+              { 'label' : 'Mr.', 'value' : 'Mr' },
+              { 'label' : 'Ms.', 'value' : 'Ms' },
+              { 'label' : 'Dr.', 'value' : 'Dr' }
+            ]
+          },
+          {
+            'name' : 'firstname',
+            'fieldType' : 'text',
+            'label' : 'Firstname',
+            'model' : 'firstname',
+            'placeholder' : 'Firstname',
+            'required' : false,
+            'minlength' : 2,
+            'errorMessages' : [
+              { 'errorType' : 'minlength', 'text' : 'Firstname must be at least 2 characters' }
+            ]
+          },
+          {
+            'name' : 'email',
+            'fieldType' : 'text',
+            'label' : 'Email',
+            'model' : 'email',
+            'placeholder' :'Email',
+            'required' : false,
+            'pattern' : '.*@.*\\..*',
+            'errorMessages' : [
+              { 'errorType' : 'pattern', 'text' : 'Invalide email address pattern' }
+            ]
+          },
+          {
+            'name' : 'phone',
+            'fieldType' : 'text',
+            'label' : 'Phone',
+            'model' : 'phone',
+            'placeholder' : 'Phone number',
+            'required' : true,
+            'errorMessages' : [
+              { 'errorType' : 'required', 'text' : 'You must provide a phone number' }
+            ]
+          },
+          {
+            'name' : 'cell',
+            'fieldType' : 'text',
+            'label' : 'Cell',
+            'model' : 'cell',
+            'placeholder' : 'Cell phone number',
+            'required' : true,
+            'errorMessages' : [
+              { 'errorType' : 'required', 'text' : 'You must provide a cell number' }
+            ]
+          }
+        ],
+        'views' : [
+          {
+            'name' : 'contactCreationForm',
+            'viewType' : 'form',
+            'cols' : [
+              {
+                'width' : 6,
+                'fields' : [
+                  { 'name' : 'title' },
+                  { 'name' : 'firstname' }
+                ]
+              },
+              {
+                'width' : 6,
+                'fields' : [
+                  { 'name' : 'email' },
+                  { 'name' : 'phone' },
+                  { 'name' : 'cell' }
+                ]
+              }
+            ],
+            'actions' : [
+              { 'name' : 'save', 'label' : 'Save', 'click' : 'test' },
+              { 'name' : 'cancel', 'label' : 'Cancel', 'click' : 'test' },
+              { 'name' : 'reset', 'label' : 'Reset', 'click' : 'test' }
+            ]
+          },
+          {
+            'name' : 'contactList',
+            'viewType' : 'list'
+          }
+        ],
+        'owner' : user
       };
 
       done();
@@ -90,8 +208,8 @@ describe('Spork CRUD tests', function () {
                 var sporks = sporksGetRes.body;
 
                 // Set assertions
-                (sporks[0].user._id).should.equal(userId);
-                (sporks[0].title).should.match('Spork Title');
+                (sporks[0].owner._id).should.equal(userId);
+                (sporks[0].name).should.match('contact');
 
                 // Call the assertion callback
                 done();
@@ -110,9 +228,9 @@ describe('Spork CRUD tests', function () {
       });
   });
 
-  it('should not be able to save an spork if no title is provided', function (done) {
-    // Invalidate title field
-    spork.title = '';
+  it('should not be able to save an spork if no name is provided', function (done) {
+    // Invalidate name field
+    spork.name = '';
 
     agent.post('/api/auth/signin')
       .send(credentials)
@@ -132,7 +250,7 @@ describe('Spork CRUD tests', function () {
           .expect(400)
           .end(function (sporkSaveErr, sporkSaveRes) {
             // Set message assertion
-            (sporkSaveRes.body.message).should.match('Title cannot be blank');
+            (sporkSaveRes.body.message).should.match('Name cannot be blank');
 
             // Handle spork save error
             done(sporkSaveErr);
@@ -163,8 +281,8 @@ describe('Spork CRUD tests', function () {
               return done(sporkSaveErr);
             }
 
-            // Update spork title
-            spork.title = 'WHY YOU GOTTA BE SO MEAN?';
+            // Update spork name
+            spork.name = 'WHY YOU GOTTA BE SO MEAN?';
 
             // Update an existing spork
             agent.put('/api/sporks/' + sporkSaveRes.body._id)
@@ -178,7 +296,7 @@ describe('Spork CRUD tests', function () {
 
                 // Set assertions
                 (sporkUpdateRes.body._id).should.equal(sporkSaveRes.body._id);
-                (sporkUpdateRes.body.title).should.match('WHY YOU GOTTA BE SO MEAN?');
+                (sporkUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
 
                 // Call the assertion callback
                 done();
@@ -198,27 +316,21 @@ describe('Spork CRUD tests', function () {
         .end(function (req, res) {
           // Set assertion
           res.body.should.be.instanceof(Array).and.have.lengthOf(1);
-
           // Call the assertion callback
           done();
         });
-
     });
   });
 
-  it('should be able to get a single spork if not signed in', function (done) {
+  it('should not be able to get a single spork if not signed in', function (done) {
     // Create new spork model instance
     var sporkObj = new Spork(spork);
 
     // Save the spork
     sporkObj.save(function () {
       request(app).get('/api/sporks/' + sporkObj._id)
-        .end(function (req, res) {
-          // Set assertion
-          res.body.should.be.instanceof(Object).and.have.property('title', spork.title);
-
-          // Call the assertion callback
-          done();
+        .expect(403).end(function (sporkDeleteErr, sporkDeleteRes) {
+          return done(sporkDeleteErr);
         });
     });
   });
@@ -292,7 +404,7 @@ describe('Spork CRUD tests', function () {
 
   it('should not be able to delete an spork if not signed in', function (done) {
     // Set spork user
-    spork.user = user;
+    spork.owner = user;
 
     // Create new spork model instance
     var sporkObj = new Spork(spork);

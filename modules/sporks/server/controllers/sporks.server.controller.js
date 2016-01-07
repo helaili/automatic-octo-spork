@@ -35,14 +35,14 @@ exports.read = function (req, res) {
 
 /**
  * Update a spork
+ * We need the full spork to be sent back - no partial update at the moment
  */
 exports.update = function (req, res) {
-  var spork = req.spork;
+  req.body.id = req.spork.id;
+  req.body._id = req.spork._id;
+  var spork = new Spork(req.body);
 
-  spork.title = req.body.title;
-  spork.content = req.body.content;
-
-  spork.save(function (err) {
+  spork.update(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -58,23 +58,30 @@ exports.update = function (req, res) {
  */
 exports.delete = function (req, res) {
   var spork = req.spork;
+  var user = req.user;
 
-  spork.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(spork);
-    }
-  });
+  if(spork.owner.id === user.id) {
+    spork.remove(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(spork);
+      }
+    });
+  } else {
+    return res.status(403).send({
+      message: 'Only the owner can delete a spork'
+    });
+  }
 };
 
 /**
  * List of Sporks
  */
 exports.list = function (req, res) {
-  Spork.find().sort('-created').populate('user', 'displayName').exec(function (err, sporks) {
+  Spork.find().sort('-created').populate('owner', 'displayName').exec(function (err, sporks) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -82,6 +89,72 @@ exports.list = function (req, res) {
     } else {
       res.append('Cache-Control', 'private, max-age=60');
       res.json(sporks);
+    }
+  });
+};
+
+
+exports.sporkByState = function (req, res) {
+  Spork.findOne({ 'menu.items.state' : req.params.stateName }).populate('owner', 'displayName').exec(function (err, spork) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if(spork) {
+        var viewName, view;
+
+        //Looking for the view name matching this state
+        for(var menuItemIndex = 0; menuItemIndex < spork.menu.items.length; menuItemIndex++) {
+          if(spork.menu.items[menuItemIndex].state === req.params.stateName) {
+            viewName = spork.menu.items[menuItemIndex].view;
+            break;
+          }
+        }
+
+        if(viewName) {
+          for(var viewIndex = 0; viewIndex < spork.views.length; viewIndex++) {
+            if(spork.views[viewIndex].name === viewName) {
+              view = spork.views[viewIndex];
+              break;
+            }
+          }
+
+          if(view) {
+            // Creating a map of the fields to later populate the concrete view
+            var cols = [];
+
+            let fieldMap = new Map();
+            spork.fields.forEach(function (field, fieldIndex) {
+              fieldMap.set(field.name, field);
+            });
+
+            view.cols.forEach(function(col, colIndex) {
+              cols[colIndex] = {
+                'width' : col.width,
+                'fields' : []
+              };
+
+              col.fields.forEach(function(field) {
+                cols[colIndex].fields.push(fieldMap.get(field.name));
+              });
+            });
+
+            view.cols = cols;
+
+            res.append('Cache-Control', 'private, max-age=60');
+            return res.json(view);
+          }
+        } else {
+          return res.status(404).send({
+            message: 'Now view found for state : ' + req.params.stateName
+          });
+        }
+      } else {
+        return res.status(404).send({
+          message: 'Unknown state : ' + req.params.stateName
+        });
+      }
     }
   });
 };
@@ -97,7 +170,7 @@ exports.sporkByID = function (req, res, next, id) {
     });
   }
 
-  Spork.findById(id).populate('user', 'displayName').exec(function (err, spork) {
+  Spork.findById(id).populate('owner', 'displayName').exec(function (err, spork) {
     if (err) {
       return next(err);
     } else if (!spork) {

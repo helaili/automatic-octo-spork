@@ -1,14 +1,11 @@
 'use strict';
 
 // sporks controller
-angular.module('sporks').controller('sporksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Sporks',
-  function ($scope, $stateParams, $location, Authentication, Sporks) {
+angular.module('sporks').controller('SporksController', ['$scope', '$stateParams', '$state', '$location', 'Authentication', 'Sporks',
+  function ($scope, $stateParams, $state, $location, Authentication, Sporks) {
     $scope.authentication = Authentication;
 
-    console.log('controller');
-
-
-
+/*
     $scope.sporkCreationFormObj = {
       name : 'sporkCreationForm',
       actions : [
@@ -20,7 +17,7 @@ angular.module('sporks').controller('sporksController', ['$scope', '$stateParams
         [
           {
             'name' : 'title',
-            'type' : 'dropdown',
+            'fieldType' : 'select',
             'label' : 'Title',
             'model' : 'title',
             'placeholder' : 'Title',
@@ -36,7 +33,7 @@ angular.module('sporks').controller('sporksController', ['$scope', '$stateParams
           },
           {
             'name' : 'firstname',
-            'type' : 'text',
+            'fieldType' : 'text',
             'label' : 'Firstname',
             'model' : 'firstname',
             'placeholder' : 'Firstname',
@@ -50,7 +47,7 @@ angular.module('sporks').controller('sporksController', ['$scope', '$stateParams
         [
           {
             'name' : 'email',
-            'type' : 'text',
+            'fieldType' : 'text',
             'label' : 'Email',
             'model' : 'email',
             'placeholder' :'Email',
@@ -62,7 +59,7 @@ angular.module('sporks').controller('sporksController', ['$scope', '$stateParams
           },
           {
             'name' : 'phone',
-            'type' : 'text',
+            'fieldType' : 'text',
             'label' : 'Phone',
             'model' : 'phone',
             'placeholder' : 'Phone number',
@@ -73,7 +70,7 @@ angular.module('sporks').controller('sporksController', ['$scope', '$stateParams
           },
           {
             'name' : 'cell',
-            'type' : 'text',
+            'fieldType' : 'text',
             'label' : 'Cell',
             'model' : 'cell',
             'placeholder' : 'Cell phone number',
@@ -86,23 +83,15 @@ angular.module('sporks').controller('sporksController', ['$scope', '$stateParams
       ]
     };
 
-    /*
+    */
 
-    $futureStateProvider.addResolve(function(Sporks) {
-      Sporks.list(function(sporkArray){
-        sporkArray.forEach(function (spork, sporkIndex) {
-          $futureStateProvider.futureState({
-            type: 'myType',
-            name: spork.state,
-            url: spork.url,
-            templateUrl: spork.templateUrl
-          });
-        });
+    $scope.loadSpork = function() {
+      Sporks.sporkByState({ stateName: $state.current.name }, function(spork) {
+        $scope.sporkCreationFormObj = spork;
       });
-    });
-*/
+    };
+
     $scope.callAction = function(action) {
-      console.log('call action');
       if (!$scope[$scope.sporkCreationFormObj.name].$valid) {
         $scope.$broadcast('show-errors-check-validity', 'innerForm');
         return false;
@@ -111,7 +100,6 @@ angular.module('sporks').controller('sporksController', ['$scope', '$stateParams
     };
 
     $scope.submitIt = function(action) {
-      console.log('submit!!!!');
       if (!$scope[$scope.sporkCreationFormObj.name].$valid) {
         $scope.$broadcast('show-errors-check-validity', 'sporkCreationForm');
         return false;

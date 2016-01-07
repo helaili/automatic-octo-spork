@@ -103,7 +103,8 @@ module.exports = function (grunt) {
       }
     },
     eslint: {
-      options: {},
+      options: {
+      },
       target: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e)
     },
     csslint: {

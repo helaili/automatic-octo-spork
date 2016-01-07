@@ -3,19 +3,19 @@
 // Configuring the sporks module
 angular.module('sporks').run(['Menus', 'Sporks',
   function (Menus, Sporks) {
-    console.log('config');
     // Add the sporks dropdown item
     Menus.addMenuItem('topbar', {
       title: 'Sporks',
       state: 'sporks',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['user']
     });
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'sporks', {
       title: 'List Sporks',
-      state: 'sporks.list'
+      state: 'sporks.list',
+      roles: ['user']
     });
 
     // Add the dropdown create item
@@ -38,7 +38,7 @@ angular.module('sporks').run(['Menus', 'Sporks',
           state: spork.menu.state,
           class: 'dynamicMenu',
           type: 'dropdown',
-          roles: ['*']
+          roles: ['user']
         });
 
         spork.menu.items.forEach(function (menuItem, menuItemIndex) {
