@@ -39,16 +39,22 @@
         $location = _$location_;
         $location.path = jasmine.createSpy().and.returnValue(true);
 
+        //Returning empty dynamic menu
+        $httpBackend.whenGET('api/menus').respond([]);
+
         // Mock logged in user
         _Authentication_.user = {
           username: 'test',
           roles: ['user']
         };
 
+
+
         // Initialize the Authentication controller
         PasswordController = $controller('PasswordController', {
           $scope: scope
         });
+
       }));
 
       it('should redirect logged in user to home', function() {
@@ -68,6 +74,9 @@
         $location.path = jasmine.createSpy().and.returnValue(true);
         $window = _$window_;
         $window.user = null;
+
+        //Returning empty dynamic menu
+        $httpBackend.whenGET('api/menus').respond([]);
 
         // Initialize the Authentication controller
         PasswordController = $controller('PasswordController', {

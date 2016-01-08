@@ -26,7 +26,7 @@ angular.module('sporks').run(['Menus', 'Sporks',
     });
 
 
-    Sporks.list(function(sporkArray) {
+    Sporks.menus(function(sporkArray) {
       buildMenu(sporkArray);
     });
 

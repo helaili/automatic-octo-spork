@@ -12,6 +12,9 @@ module.exports = function (app) {
     .get(sporks.list)
     .post(sporks.create);
 
+  app.route('/api/menus').all(sporksPolicy.isAllowed)
+    .get(sporks.list);
+
   // Single spork routes
   app.route('/api/sporks/state/:stateName').all(sporksPolicy.isAllowed)
     .get(sporks.sporkByState);

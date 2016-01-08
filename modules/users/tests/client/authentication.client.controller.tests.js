@@ -45,6 +45,10 @@
         AuthenticationController = $controller('AuthenticationController', {
           $scope: scope
         });
+
+        //Returning empty dynamic menu
+        $httpBackend.whenGET('api/menus').respond([]);
+
       }));
 
       describe('$scope.signin()', function () {

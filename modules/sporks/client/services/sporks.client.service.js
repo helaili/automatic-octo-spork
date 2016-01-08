@@ -14,6 +14,11 @@ angular.module('sporks').factory('Sporks', ['$resource',
       list: {
         method: 'GET',
         url: 'api/sporks',
+        isArray: true
+      },
+      menus: {
+        method: 'GET',
+        url: 'api/menus',
         cache: true,
         isArray: true
       },

@@ -7,20 +7,26 @@
     var scope,
       element,
       $compile,
+      $httpBackend,
       form;
 
     // Load the main application module
     beforeEach(module(ApplicationConfiguration.applicationModuleName));
 
-    beforeEach(inject(function(_$rootScope_, _$compile_) {
+    beforeEach(inject(function(_$rootScope_, _$compile_, _$httpBackend_) {
       // Set a new global scope
       scope = _$rootScope_.$new();
       $compile = _$compile_;
+      $httpBackend = _$httpBackend_;
 
       scope.passwordMock = {
         newPassword: 'P@ssw0rd!!',
         verifyPassword: 'P@ssw0rd!!'
       };
+
+      //Returning empty dynamic menu
+      $httpBackend.whenGET('api/menus').respond([]);
+      
     }));
 
     function compileDirective(template) {

@@ -36,7 +36,7 @@ exports.invokeRolesPolicies = function () {
   }, {
     roles: ['guest'],
     allows: [{
-      resources: '/api/sporks',
+      resources: '/api/menus',
       permissions: ['get']
     }]
   }]);

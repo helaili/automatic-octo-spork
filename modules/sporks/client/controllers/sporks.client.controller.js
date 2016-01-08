@@ -5,85 +5,6 @@ angular.module('sporks').controller('SporksController', ['$scope', '$stateParams
   function ($scope, $stateParams, $state, $location, Authentication, Sporks) {
     $scope.authentication = Authentication;
 
-/*
-    $scope.sporkCreationFormObj = {
-      name : 'sporkCreationForm',
-      actions : [
-        { 'name' : 'save', 'label' : 'Save', 'click' : 'test' },
-        { 'name' : 'cancel', 'label' : 'Cancel', 'click' : 'test' },
-        { 'name' : 'reset', 'label' : 'Reset', 'click' : 'test' }
-      ],
-      cols : [
-        [
-          {
-            'name' : 'title',
-            'fieldType' : 'select',
-            'label' : 'Title',
-            'model' : 'title',
-            'placeholder' : 'Title',
-            'required' : true,
-            'errorMessages' : [
-              { 'type' : 'required', 'text' : 'You must provide a title' }
-            ],
-            'options' : [
-              { 'label' : 'Mr.', 'value' : 'Mr' },
-              { 'label' : 'Ms.', 'value' : 'Ms' },
-              { 'label' : 'Dr.', 'value' : 'Dr' }
-            ]
-          },
-          {
-            'name' : 'firstname',
-            'fieldType' : 'text',
-            'label' : 'Firstname',
-            'model' : 'firstname',
-            'placeholder' : 'Firstname',
-            'required' : false,
-            'minlength' : 2,
-            'errorMessages' : [
-              { 'type' : 'minlength', 'text' : 'Firstname must be at least 2 characters' }
-            ]
-          }
-        ],
-        [
-          {
-            'name' : 'email',
-            'fieldType' : 'text',
-            'label' : 'Email',
-            'model' : 'email',
-            'placeholder' :'Email',
-            'required' : false,
-            'pattern' : '.*@.*\\..*',
-            'errorMessages' : [
-              { 'type' : 'pattern', 'text' : 'Invalide email address pattern' }
-            ]
-          },
-          {
-            'name' : 'phone',
-            'fieldType' : 'text',
-            'label' : 'Phone',
-            'model' : 'phone',
-            'placeholder' : 'Phone number',
-            'required' : true,
-            'errorMessages' : [
-              { 'type' : 'required', 'text' : 'You must provide a phone number' }
-            ]
-          },
-          {
-            'name' : 'cell',
-            'fieldType' : 'text',
-            'label' : 'Cell',
-            'model' : 'cell',
-            'placeholder' : 'Cell phone number',
-            'required' : true,
-            'errorMessages' : [
-              { 'type' : 'required', 'text' : 'You must provide a cell number' }
-            ]
-          }
-        ]
-      ]
-    };
-
-    */
 
     $scope.loadSpork = function() {
       Sporks.sporkByState({ stateName: $state.current.name }, function(spork) {
@@ -124,8 +45,8 @@ angular.module('sporks').controller('SporksController', ['$scope', '$stateParams
 
       // Create new Spork object
       var spork = new Sporks({
-        title: this.title,
-        content: this.content
+        name : this.name,
+        description : this.description
       });
 
       // Redirect after save
@@ -133,8 +54,8 @@ angular.module('sporks').controller('SporksController', ['$scope', '$stateParams
         $location.path('sporks/' + response._id);
 
         // Clear form fields
-        $scope.title = '';
-        $scope.content = '';
+        $scope.name = '';
+        $scope.description = '';
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });

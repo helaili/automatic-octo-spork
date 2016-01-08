@@ -33,9 +33,9 @@
     });
 
     // Then we can start by loading the main application module
-    //beforeEach(module(ApplicationConfiguration.applicationModuleName));
-    beforeEach(module('ui.router'));
-    beforeEach(module('articles'));
+    beforeEach(module(ApplicationConfiguration.applicationModuleName));
+    //beforeEach(module('ui.router'));
+    //beforeEach(module('automatic-octo-spork'));
 
     // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
     // This allows us to inject a service but then attach it to a variable
@@ -67,6 +67,10 @@
       ArticlesController = $controller('ArticlesController', {
         $scope: scope
       });
+
+      //Returning empty dynamic menu 
+      $httpBackend.whenGET('api/menus').respond([]);
+
     }));
 
     it('$scope.find() should create an array with at least one article object fetched from XHR', inject(function (Articles) {
