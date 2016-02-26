@@ -11,14 +11,14 @@
         'state' : 'contacts.list',
         'url' : '/',
         'view' : 'contactList',
-        'templateUrl': 'modules/sporks/client/views/list-sporks.client.view.html'
+        'templateUrl': 'modules/sporks/client/views/list-generics.client.view.html'
       },
       {
         'title' : 'Create Contact',
         'state' : 'contacts.create',
         'url' : '/create',
         'view' : 'contactCreationForm',
-        'templateUrl': 'modules/sporks/client/views/create-spork.client.view.html'
+        'templateUrl': 'modules/sporks/client/views/create-generic.client.view.html'
       }
     ]
   },
@@ -90,20 +90,27 @@
     {
       name : 'contactCreationForm',
       viewType : 'form',
-      cols : [
+      title : 'New Contact',
+      description : 'This is the new contact form description',
+      sections : [
         {
-          width : 6,
-          fields : [
-            { 'name' : 'title' },
-            { 'name' : 'firstname' }
-          ]
-        },
-        {
-          width : 6,
-          fields : [
-            { 'name' : 'email' },
-            { 'name' : 'phone' },
-            { 'name' : 'cell' }
+          name : 'mainForm',
+          cols : [
+            {
+              width : 6,
+              fields : [
+                { 'name' : 'title' },
+                { 'name' : 'firstname' }
+              ]
+            },
+            {
+              width : 6,
+              fields : [
+                { 'name' : 'email' },
+                { 'name' : 'phone' },
+                { 'name' : 'cell' }
+              ]
+            }
           ]
         }
       ],
@@ -115,6 +122,236 @@
     },
     {
       name : 'contactList',
+      viewType : 'list'
+    }
+  ]
+}
+
+{
+  'name' : 'spork',
+  'description' : 'This is the spork module',
+  'menu' : {
+    'title' : 'Sporks',
+    'state' : 'sporks',
+    'url' : '/sporks',
+    'items' : [
+      {
+        'title' : 'List Sporks',
+        'state' : 'sporks.list',
+        'url' : '/',
+        'view' : 'sporkList',
+        'templateUrl': 'modules/sporks/client/views/list-generics.client.view.html'
+      },
+      {
+        'title' : 'Create Spork',
+        'state' : 'sporks.create',
+        'url' : '/create',
+        'view' : 'sporkCreationForm',
+        'templateUrl': 'modules/sporks/client/views/create-generic.client.view.html'
+      }
+    ]
+  },
+  'fields' : [
+     {
+      'name' : 'name',
+      'fieldType' : 'text',
+      'label' : 'Name',
+      'model' : 'name',
+      'placeholder' : 'Name',
+      'required' : true,
+      'errorMessages' : [
+        { 'errorType' : 'required', 'text' : 'A name must be provided' }
+      ]
+    },
+    {
+      'name' : 'description',
+      'fieldType' : 'text',
+      'label' : 'Description',
+      'model' : 'description',
+      'placeholder' :'Description',
+      'required' : false
+    },
+    {
+      'name' : 'title',
+      'fieldType' : 'text',
+      'label' : 'Title',
+      'model' : 'menu.title',
+      'placeholder' :'Menu title',
+      'required' : true,
+      'errorMessages' : [
+        { 'errorType' : 'required', 'text' : 'A title must be provided' }
+      ]
+    },
+    {
+      'name' : 'state',
+      'fieldType' : 'text',
+      'label' : 'State',
+      'model' : 'menu.state',
+      'placeholder' :'Menu state',
+      'required' : false
+    },
+    {
+      'name' : 'url',
+      'fieldType' : 'text',
+      'label' : 'URL',
+      'model' : 'menu.url',
+      'placeholder' :'URL',
+      'required' : false
+    },
+    {
+      'name' : 'menuItems',
+      'fieldType' : 'array',
+      'label' : 'Menu Entries',
+      'model' : 'menu.items',
+      'content' : [
+        {
+          'name' : 'menu.title',
+          'fieldType' : 'text',
+          'label' : 'Title',
+          'model' : 'menu.item.title',
+          'placeholder' :'Title',
+          'required' : true,
+          'errorMessages' : [
+            { 'errorType' : 'required', 'text' : 'A title must be provided' }
+          ]
+        },
+        {
+          'name' : 'menu.state',
+          'fieldType' : 'text',
+          'label' : 'State',
+          'model' : 'menu.item.state',
+          'placeholder' :'State',
+          'required' : true,
+          'errorMessages' : [
+            { 'errorType' : 'required', 'text' : 'A State must be provided' }
+          ]
+        },
+        {
+          'name' : 'menu.url',
+          'fieldType' : 'text',
+          'label' : 'URL',
+          'model' : 'menu.item.url',
+          'placeholder' :'URL',
+          'required' : true,
+          'errorMessages' : [
+            { 'errorType' : 'required', 'text' : 'An URL must be provided' }
+          ]
+        },
+        {
+          'name' : 'menu.view',
+          'fieldType' : 'text',
+          'label' : 'View',
+          'model' : 'menu.item.view',
+          'placeholder' :'View',
+          'required' : true,
+          'errorMessages' : [
+            { 'errorType' : 'required', 'text' : 'A View must be provided' }
+          ]
+        },
+        {
+          'name' : 'templateUrl',
+          'fieldType' : 'text',
+          'label' : 'Template URL',
+          'model' : 'menu.item.templateUrl',
+          'placeholder' :'Template URL',
+          'required' : true,
+          'errorMessages' : [
+            { 'errorType' : 'required', 'text' : 'A Template URL must be provided' }
+          ]
+        }
+      ]
+    }
+  ],
+  views : [
+    {
+      name : 'sporkCreationForm',
+      formName : 'sporkCreationForm',
+      viewType : 'form',
+      title : 'New Spork',
+      description : 'A Spork is a business object you can define, taylor to your needs and connect to other objects',
+      sections : [
+        {
+          formName : 'mainForm',
+          cols : [
+            {
+              width : 6,
+              fields : [
+                { 'name' : 'name' }
+              ]
+            },
+            {
+              width : 6,
+              fields : [
+                { 'name' : 'description' }
+              ]
+            }
+          ]
+        },
+        {
+          title : 'Menu',
+          formName : 'menuForm',
+          cols : [
+            {
+              width : 4,
+              fields : [
+                { 'name' : 'title' }
+              ]
+            },
+            {
+              width : 4,
+              fields : [
+                { 'name' : 'state' }
+              ]
+            },
+            {
+              width : 4,
+              fields : [
+                { 'name' : 'url' }
+              ]
+            }
+          ],
+          tables : [
+            {
+              name : 'menuItems',
+              formName : 'menuItemsForm',
+              globalActions : [
+                {
+                  label : 'Add Menu Item',
+                  actionType : 'newTableLine'
+                }
+              ],
+              rowActions : [
+                {
+                  label : 'Save',
+                  actionType : 'saveTableline',
+                  glyphicon : 'glyphicon-ok',
+                  editModeOn : true
+                },
+                {
+                  label : 'Edit',
+                  actionType : 'editTableLine',
+                  glyphicon : 'glyphicon-pencil',
+                  editModeOn : false
+                },
+                {
+                  label : 'Delete',
+                  actionType : 'deleteTableLine',
+                  glyphicon : 'glyphicon-remove',
+                  editModeOn : false
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      actions : [
+        { 'name' : 'save', 'label' : 'Save', 'click' : 'test' },
+        { 'name' : 'cancel', 'label' : 'Cancel', 'click' : 'test' },
+        { 'name' : 'reset', 'label' : 'Reset', 'click' : 'test' }
+      ]
+    },
+    {
+      name : 'sporkList',
       viewType : 'list'
     }
   ]

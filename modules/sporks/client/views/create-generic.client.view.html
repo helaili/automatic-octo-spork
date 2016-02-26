@@ -1,0 +1,106 @@
+<section ng-controller="SporksController" ng-init="loadSpork()">
+  <div class="page-header row">
+        <strong class="col-md-6">{{sporkCreationFormObj.title}}</strong>
+      <div  class="col-md-6 text-right">
+        <div class="btn-group btn-group-sm">
+          <button ng-repeat="action in sporkCreationFormObj.actions" type="button" class="btn btn-primary" ng-click="callAction(action.click)">{{action.label}}</button>
+        </div>
+      </div>
+  </div>
+
+  <form name="{{sporkCreationFormObj.formName}}" class="form-horizontal" novalidate>
+    <fieldset>
+      <div ng-repeat="section in sporkCreationFormObj.sections" class="spork-section col-md-12">
+        <ng-form name="{{section.formName}}">
+          <h4 class="spork-title">{{section.title}}</h4>
+          <div ng-repeat="col in section.cols" class="col-md-{{col.width}}" >
+
+            <div ng-repeat="entry in col.fields" ng-switch="entry.fieldType">
+
+              <div class="form-group" ng-switch-when="text" show-errors>
+                <label for="{{entry.name}}" class="col-sm-2 control-label">{{entry.label}}</label>
+                <div class="col-sm-10" >
+                  <input name="{{entry.name}}" type="text" ng-model="$root[entry.model]" class="form-control"
+                         placeholder="{{entry.placeholder}}" ng-required="entry.required"
+                         ng-minlength="entry.minlength" ng-maxlength="entry.maxlength"
+                         ng-pattern="entry.pattern">
+                  <div ng-messages="innerForm[entry.name].$error" role="alert">
+                    <div ng-repeat="errorMessage in entry.errorMessages">
+                      <p class="help-block error-text" ng-message-exp="errorMessage.errorType">{{errorMessage.text}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group" ng-switch-when="select" show-errors>
+                <label for="{{entry.name}}" class="col-sm-2 control-label">{{entry.label}}</label>
+                <div class="col-sm-10" >
+                  <select name="{{entry.name}}" ng-model="$root[entry.model]" ng-options="option.label for option in entry.options" class="form-control"  ng-required="entry.required"></select>
+                  <div ng-messages="innerForm[entry.name].$error" role="alert">
+                    <div ng-repeat="errorMessage in entry.errorMessages">
+                      <p class="help-block error-text" ng-message-exp="errorMessage.errorType">{{errorMessage.text}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </ng-form>
+        <div class="form-group" ng-if="section.tables">
+          <div class="spork-table-container" ng-repeat="table in section.tables">
+            <ng-form name="{{table.formName}}">
+              <div class="btn-group btn-group-sm">
+                <button ng-repeat="action in table.globalActions" type="button" class="btn btn-primary" ng-click="callTableAction(action.actionType, table)">{{action.label}}</button>
+              </div>
+
+              <table class="table table-condensed spork-table" id="{{table.name}}">
+                <thead>
+                  <tr>
+                    <!-- Actions -->
+                    <th></th>
+                    <th ng-repeat="colHeader in table.content">{{colHeader.label}}</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr ng-show="table.editModeOn">
+                    <td>
+                      <div class="btn-group btn-group-sm">
+                        <button ng-repeat="action in table.rowActions" ng-if="action.editModeOn" class="btn btn-default btn-xs" aria-label="Left Align" ng-click="callTableAction(action.actionType, table)">
+                          <span class="glyphicon {{action.glyphicon}}" aria-hidden="true"></span>
+                        </button>
+                      </div>
+                    </td>
+                    <td ng-repeat="field in table.content" ng-switch="field.fieldType" class="form-group" show-errors>
+                      <input ng-switch="field.fieldType" name="{{field.name}}" type="text" ng-model="$root[field.model]" class="form-control"
+                             placeholder="{{field.placeholder}}" ng-required="field.required"
+                             ng-minlength="field.minlength" ng-maxlength="field.maxlength"
+                             ng-pattern="field.pattern">
+                       <div ng-messages="menuItemsForm[field.name].$error" role="alert">
+                         <div ng-repeat="errorMessage in field.errorMessages">
+                           <p class="help-block error-text" ng-message-exp="errorMessage.errorType">{{errorMessage.text}}</p>
+                         </div>
+                       </div>
+                    </td>
+                  </tr>
+                  <tr ng-repeat="row in getObjectFromModelName(table.model, true)">
+                    <td>
+                      <button ng-repeat="action in table.rowActions" ng-if="!action.editModeOn" type="button" class="btn btn-default btn-xs" aria-label="Left Align">
+                        <span class="glyphicon {{action.glyphicon}}" aria-hidden="true"></span>
+                      </button>
+                    </td>
+                    <td ng-repeat="colHeader in table.content">{{row[colHeader.name]}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div>{{menuItemsForm['menu.title'].$error}}</div>
+              <div>{{getField('menuItemsForm', 'menu.title')}}</div>
+              <div>{{$scope['sporkCreationForm']['menuItemsForm']['menu.title']}}</div>
+            </ng-form>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+</section>

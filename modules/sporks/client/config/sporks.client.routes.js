@@ -4,6 +4,7 @@
 angular.module('sporks').config(['$stateProvider',
   function ($stateProvider) {
     // sporks state routing
+/*
     $stateProvider
       .state('sporks', {
         abstract: true,
@@ -32,7 +33,7 @@ angular.module('sporks').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       });
-
+*/
     var initInjector = angular.injector(['ng']);
     var $http = initInjector.get('$http');
     $http.get('http://localhost:3000/api/sporks').then(function(response) {

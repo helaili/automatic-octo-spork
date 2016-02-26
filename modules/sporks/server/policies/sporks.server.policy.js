@@ -34,7 +34,7 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get', 'put', 'delete']
     }]
   }, {
-    roles: ['guest'],
+    roles: ['guest', 'user', 'admin'],
     allows: [{
       resources: '/api/menus',
       permissions: ['get']

@@ -3,6 +3,7 @@
 // Configuring the sporks module
 angular.module('sporks').run(['Menus', 'Sporks',
   function (Menus, Sporks) {
+    /*
     // Add the sporks dropdown item
     Menus.addMenuItem('topbar', {
       title: 'Sporks',
@@ -25,7 +26,7 @@ angular.module('sporks').run(['Menus', 'Sporks',
       roles: ['user']
     });
 
-
+*/
     Sporks.menus(function(sporkArray) {
       buildMenu(sporkArray);
     });

@@ -95,66 +95,57 @@ exports.list = function (req, res) {
 
 
 exports.sporkByState = function (req, res) {
-  Spork.findOne({ 'menu.items.state' : req.params.stateName }).populate('owner', 'displayName').exec(function (err, spork) {
+  Spork.findOne({ 'menu.items.state' : req.params.stateName }).populate('owner', 'displayName').exec(function (err, sporkDBObj) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      if(spork) {
-        var viewName, view;
+    } else if(sporkDBObj) {
+      var viewName;
+      // Detaching the obect from Mongoose so I can freely manipulate it
+      var spork = sporkDBObj.toObject();
 
-        //Looking for the view name matching this state
-        for(var menuItemIndex = 0; menuItemIndex < spork.menu.items.length; menuItemIndex++) {
-          if(spork.menu.items[menuItemIndex].state === req.params.stateName) {
-            viewName = spork.menu.items[menuItemIndex].view;
-            break;
-          }
-        }
+      // Creating a map of the fields to later populate the concrete view
+      let fieldMap = new Map();
+      spork.fields.forEach(function (field, fieldIndex) {
+        fieldMap.set(field.name, field);
+      });
 
-        if(viewName) {
-          for(var viewIndex = 0; viewIndex < spork.views.length; viewIndex++) {
-            if(spork.views[viewIndex].name === viewName) {
-              view = spork.views[viewIndex];
-              break;
-            }
-          }
 
-          if(view) {
-            // Creating a map of the fields to later populate the concrete view
-            var cols = [];
+      spork.views.forEach(function(view) {
+        view.sections.forEach(function(section, sectionIndex) {
+          //Re-injecting the field definition in the section's columns
+          var cols = [];
 
-            let fieldMap = new Map();
-            spork.fields.forEach(function (field, fieldIndex) {
-              fieldMap.set(field.name, field);
+          section.cols.forEach(function(col, colIndex) {
+            cols[colIndex] = {
+              'width' : col.width,
+              'fields' : []
+            };
+
+            col.fields.forEach(function(field) {
+              cols[colIndex].fields.push(fieldMap.get(field.name));
             });
-
-            view.cols.forEach(function(col, colIndex) {
-              cols[colIndex] = {
-                'width' : col.width,
-                'fields' : []
-              };
-
-              col.fields.forEach(function(field) {
-                cols[colIndex].fields.push(fieldMap.get(field.name));
-              });
-            });
-
-            view.cols = cols;
-
-            res.append('Cache-Control', 'private, max-age=60');
-            return res.json(view);
-          }
-        } else {
-          return res.status(404).send({
-            message: 'Now view found for state : ' + req.params.stateName
           });
-        }
-      } else {
-        return res.status(404).send({
-          message: 'Unknown state : ' + req.params.stateName
+          section.cols = cols;
+
+          //Re-injecting the field definition in the section's tables
+          section.tables.forEach(function(table, tableIndex) {
+            // Need to detach obects from Mongoose to merge them
+            var tableDef = fieldMap.get(table.name);
+            var key;
+            for (key in tableDef) {
+              if (!table.hasOwnProperty(key)) {
+                table[key] = tableDef[key];
+              }
+            }
+          });
         });
-      }
+      });
+
+      return res.json(spork);
+    } else {
+      return res.status(404).send({ message: 'Unknown state : ' + req.params.stateName });
     }
   });
 };
